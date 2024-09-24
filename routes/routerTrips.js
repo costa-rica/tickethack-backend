@@ -3,14 +3,12 @@ var router = express.Router();
 const Trip = require('../models/trips')
 
 router.get('/search',(req,res) =>{
-    // code
     console.log('- in /search --')
-
-
-    Trip.find().then(data =>{
+     Trip.find().then(data =>{
         res.json({allTrips: data})
     })
 
+router.post
 
     // res.json({allTrips: true});
 });
