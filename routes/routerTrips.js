@@ -3,34 +3,44 @@ var router = express.Router();
 const Trip = require('../models/trips')
 
 
-router.get('/search',(req,res) =>{
+router.get('/search', (req, res) => {
     // code
     console.log('- in /search --')
     Trip.find({})
-    .then(data =>{
-        res.json({allTrips: data})
-    })
+        .then(data => {
+            res.json({ allTrips: data })
+        })
     // res.json({allTrips: true});
 });
 
-router.post('/search',(req,res) =>{
-    
+// Buton "Search"
+router.post('/search', (req, res) => {
     console.log("- in POST /search")
-    
-    // const { arrival, departure, date } = req.body
 
     const arrival = req.body.arrival
     const departure = req.body.departure
     const date = req.body.date
     
-    console.log(``)
-    // code
-    console.log('- in /search --')
-    Trip.find({})
-    .then(data =>{
-        res.json({allTrips: data})
-    })
-    // res.json({allTrips: true});
+    let allTripsFormatted = []
+
+    if (arrival, departure, date){
+        console.log('- in /search --')
+        Trip.find({
+            arrival: arrival,
+            departure: departure,
+            date: date
+        }).then(data => {
+                res.json({ message: "found",allTrips: data })
+
+                
+
+
+            })
+    } else {
+        console.log(" no trip found ")
+        res.json({message: "No trip found"})
+    }
+
 });
 
 // router.get('/myCart',(req,res) =>{
