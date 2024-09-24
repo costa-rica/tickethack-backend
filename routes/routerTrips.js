@@ -46,7 +46,7 @@ router.post('/search',(req,res) =>{
 
 
 //     res.json({bookedTrips: arrayTrips});
-// }); //
+// });
 
 
 module.exports = router;
