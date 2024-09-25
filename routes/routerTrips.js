@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Trip = require('../models/trips')
+const CartTrip = require('../models/cartTrips')
 const moment = require('moment')
 
 router.get('/search', (req, res) => {
@@ -65,6 +66,36 @@ router.post('/search', (req, res) => {
     }
 });
 
+
+router.post('/cart', (req, res) =>{
+    console.log('- dedans POST /trips/cart ')
+
+    const tripId = req.body.tripId
+    console.log(`tripID: ${tripId}`)
+    
+    if (tripId){
+        console.log(`-- dedans if --`)
+        Trip.findById(tripId).then(data =>{
+            console.log(data);
+
+            const newCartTrip = new CartTrip(data)
+            newCartTrip.save().then(() => {
+                CartTrip.find().then(data => {
+                    console.log(`CartTrip data: ${data}`);
+                    res.json({result:true, tripId: tripId, data: data})
+                })
+        })
+    })
+    } else {
+        console.log(`-- dedans else --`)
+        res.json({result:false, message: "Missing tripID"})
+
+    }
+
+
+
+
+})
 
 
 
