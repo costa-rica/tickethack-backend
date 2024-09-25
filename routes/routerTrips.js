@@ -7,7 +7,13 @@ router.get('/search', (req, res) => {
     console.log('- in GET /trips/search --')
     Trip.find({})
         .then(data => {
-            return res.json({ tripsArray: data })
+            
+            for (let trip of data){
+                console.log(`trip date: ${trip.date}`)
+                // console.log(`trip date: ${trip.date}`)
+            }
+            console.log("data.length: ", data.length)
+            return res.json({ tripsArray: data, length: data.length })
         })
 });
 
@@ -26,35 +32,41 @@ router.post('/search', (req, res) => {
     // const date = moment(req.body.date).format("YYYY-MM-DD")
     // const date = Date.parse(req.body.date)// YYYY-MM-DD
     const dateFormatted = new Date(req.body.date).toISOString().split('T')[0]// YYYY-MM-DD
-
+    console.log("dateFormatted: " + dateFormatted)
+    console.log(`dateFormatted: ${typeof dateFormatted}`)
     const dateObject =  new Date(dateFormatted)
+    const tomorrowDateObject = dateObject + 1
 
     console.log("dateObject: " + dateObject)
     console.log(`dateObject: ${typeof dateObject}`)
+    console.log("tomorrowDateObject: " + tomorrowDateObject)
+    console.log(`tomorrowDateObject: ${typeof tomorrowDateObject}`)
 
-    const momentDate = moment([dateFormatted]).format("YYYY-MM-DD HH:MM:SS")
+    // const momentDate = moment([dateFormatted]).format("YYYY-MM-DD HH:MM:SS")
 
-    console.log("moment dateObject: " + momentDate)
-    console.log(`momentDate: ${typeof momentDate}`)
+    // console.log("moment dateObject: " + momentDate)
+    // console.log(`momentDate: ${typeof momentDate}`)
     
-    const dateIsoString = dateObject.toISOString()
+    // const dateIsoString = dateObject.toISOString()
     
-    console.log("dateIsoString: " + dateIsoString)
-    console.log(`dateIsoString: ${typeof dateIsoString}`)
+    // console.log("dateIsoString: " + dateIsoString)
+    // console.log(`dateIsoString: ${typeof dateIsoString}`)
 
     let allTripsFormatted = []
 
-    if (arrival, departure, dateIsoString){
+    if (arrival, departure, dateFormatted){
         Trip.find({
             arrival: arrival,
             departure: departure,
-            date: dateIsoString
+            // date: dateIsoString
+            date: {$gte: new Date("2024-09-24T01:10:15.973+00:00"), $lte: new Date("2024-09-24T22:10:15.973+00:00")}
         }).then(data => {
+            console.log("data.length: ", data.length)
 
             for (let trip of data){
-                console.log(`trip.date: ${trip.date}`)
-                console.log(`trip.date: ${trip.date.getHours()}`)
-                console.log(`trip.date: ${trip.date.getMinutes()}`)
+                // console.log(`trip.date: ${trip.date}`)
+                // console.log(`trip.date: ${trip.date.getHours()}`)
+                // console.log(`trip.date: ${trip.date.getMinutes()}`)
             // Formatter les donnees
             // trajet: "Paris > Lyon"
             // heure: "HH:MM"
@@ -82,6 +94,34 @@ router.post('/search', (req, res) => {
 
     }
 });
+
+// Buton "Search"
+router.post('/search2', (req, res) => {
+    console.log("- in POST /trips/search2")
+  
+    const arrival = req.body.arrival
+    const departure = req.body.departure
+    const date = req.body.date
+
+    const dateStart = new Date("2024-09-25")
+    const dateEnd = new Date("2024-09-26")
+
+    console.log(`dateStart: ${dateStart}`)
+    console.log(`dateStart: ${typeof dateStart}`)
+    console.log(`dateEnd: ${dateEnd}`)
+    console.log(`dateEnd: ${typeof dateEnd}`)
+    console.log(`dateStart < dateEnd: ${dateStart < dateEnd}`)
+
+    Trip.find(
+        // {date:{$lte: dateEnd}}
+        {date: {$gte: dateStart, $lte: dateEnd}}
+    ).then(data => {
+        console.log(data)
+        res.json({result: true, tripArrayCount: data.length})
+    })
+
+})
+
 
 // router.get('/myCart',(req,res) =>{
 //     // code
