@@ -107,8 +107,6 @@ router.post('/cart', (req, res) => {
 
 
 
-
-
 router.delete('/cart', (req, res) => {
     console.log('- dedans DELETE /trips/cart ')
 
@@ -130,7 +128,68 @@ router.delete('/cart', (req, res) => {
 
 })
 
+router.get('/cart-purchase', (req,res) => {
+    console.log('- dedans GET /trips/cart-purchase ')
+    // 
+    const allTripsFormatted = []
+    let purchaseTotal = 0
+    CartTrip.find().then(data => {
+        for (let trip of data) {
+            // Formatter les donnees
+            // trajet: "Paris > Lyon"
+            // heure: "HH:MM"
+            // prix: [prix] + €
+            const tripTime = `${trip.date.getHours()}:${trip.date.getMinutes()}`
 
+            console.log(`tripTime: ${tripTime}`)
+            const tripObject = {
+                arrivalDeparture: `${trip.arrival} > ${trip.departure}`,
+                time: tripTime,
+                price: `${trip.price}€`
+            }
+            allTripsFormatted.push(tripObject)
+            purchaseTotal += trip.price
+    }
+    res.json({result: true, tripsArray: allTripsFormatted, purchaseTotal})
+})
+})
+
+router.get('/booking', (req,res) => {
+    console.log("- in GET /trips/bookings")
+
+    const today = new Date()
+
+    console.log(`today: ${today}`)
+
+    const allTripsFormatted = []
+    CartTrip.find().then(data => {
+        for (let trip of data) {
+            console.log(`tripDate: ${trip.date}`)
+            const timeDifference =  trip.date - today
+            const timeDiffereneInDays = Math.round(timeDifference / (1000 * 60 * 60 * 24));
+            const timeDiffereneInHours = Math.floor((timeDifference / (1000 * 60 * 60)) % 24);
+            console.log(`timeDiffereneInDays: ${timeDiffereneInDays}`)
+            console.log(`timeDiffereneInHours: ${timeDiffereneInHours}`)
+            const tripTime = `${trip.date.getHours()}:${trip.date.getMinutes()}`
+
+            console.log(`tripTime: ${tripTime}`)
+            let departTimeString = `Departure in ${timeDiffereneInHours}`
+            if (timeDiffereneInDays > 0 ){
+                departTimeString = `Departure in ${timeDiffereneInDays} days and ${timeDiffereneInHours} hours`
+            }
+
+            const tripObject = {
+                arrivalDeparture: `${trip.arrival} > ${trip.departure}`,
+                time: tripTime,
+                price: `${trip.price}€`,
+                departTime: departTimeString
+            }
+            allTripsFormatted.push(tripObject)
+            // purchaseTotal += trip.price
+    }
+    res.json({result: true, tripsArray: allTripsFormatted})
+    })
+})
 
 
 
