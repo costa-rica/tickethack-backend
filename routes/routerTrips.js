@@ -55,7 +55,8 @@ router.post('/search', (req, res) => {
                 const tripObject = {
                     arrivalDeparture: `${trip.arrival} > ${trip.departure}`,
                     time: tripTime,
-                    price: `${trip.price}€`
+                    price: `${trip.price}€`,
+                    tripId: trip._id
                 }
                 allTripsFormatted.push(tripObject)
             }
