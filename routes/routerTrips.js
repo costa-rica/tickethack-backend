@@ -146,7 +146,8 @@ router.get('/cart-purchase', (req,res) => {
             const tripObject = {
                 arrivalDeparture: `${trip.arrival} > ${trip.departure}`,
                 time: tripTime,
-                price: `${trip.price}€`
+                price: `${trip.price}€`,
+                tripCartId: trip._id
             }
             allTripsFormatted.push(tripObject)
             purchaseTotal += trip.price
