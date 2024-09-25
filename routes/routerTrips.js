@@ -36,8 +36,9 @@ router.post('/search', (req, res) => {
 
     if (arrival, departure, dateObject){
         Trip.find({
-            arrival: arrival,
-            departure: departure,
+            // arrival: arrival,
+            arrival: { $regex: new RegExp(arrival, "i") },
+            departure: { $regex: new RegExp(departure, "i") },
             // date: dateIsoString
             date: {$gte: dateObject, $lte: tomorrowDate}
         }).then(data => {
